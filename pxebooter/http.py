@@ -39,13 +39,16 @@ class HTTPHandler(BaseHTTPRequestHandler):
 
     print("  sending", filename)
 
-    with open(filename, "rb") as f:
+    with open(filename, "r") as f:
       data = f.read()
-      self.send_response(200)
-      self.send_header("Content-Length", str(len(data)))
-      self.send_header("Content-Type", "application/octet-stream")
-      self.end_headers()
-      self.wfile.write(data)
+      data = data.replace("{{ip}}", server_ip)
+      data = data.encode("utf-8")
+
+    self.send_response(200)
+    self.send_header("Content-Length", str(len(data)))
+    self.send_header("Content-Type", "application/octet-stream")
+    self.end_headers()
+    self.wfile.write(data)
 
   def do_GET(self):
     if self.path != "/ipxe.efi" and self.path != "/autoexec.ipxe":
