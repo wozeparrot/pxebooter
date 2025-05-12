@@ -1,0 +1,8 @@
+#!ipxe
+
+dhcp
+
+params
+param uuid ${uuid}
+
+chain http://{{ip}}:11000/boot##params
