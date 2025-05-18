@@ -46,6 +46,7 @@ def TFTPHandlerFactory(server_ip:str=""):
           data = data.encode("utf-8")
 
       tsock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+      tsock.bind((server_ip, 0))
       try:
         block_number = 1
         if want_size:
