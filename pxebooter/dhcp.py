@@ -38,6 +38,7 @@ def DHCPHandlerFactory(proxy:bool, server_ip:str=""):
 
       print(f"  client mac: {chaddr[:hlen].hex(':')}, client ip: {socket.inet_ntoa(ciaddr)}, options: {options}")
       print(f"    yiaddr: {socket.inet_ntoa(yiaddr)}, giaddr: {socket.inet_ntoa(giaddr)}, flags: {hex(flags)}, secs: {secs}")
+      print(f"    siaddr: {socket.inet_ntoa(siaddr)}, sname: {sname.decode('ascii', errors='ignore')}, file: {file.decode('ascii', errors='ignore')}")
 
       res_siaddr = socket.inet_aton(server_ip)
       dhcp_offer = struct.pack("!BBBBLHH4s4s4s4s16s64s128s", 2, htype, hlen, hops, xid, secs, flags,
