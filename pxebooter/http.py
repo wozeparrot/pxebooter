@@ -76,9 +76,9 @@ class HTTPHandler(BaseHTTPRequestHandler):
       self.end_headers()
       self.wfile.write(data)
 
-def run():
+def run(ip:str=""):
   print("starting http")
-  server = socketserver.ThreadingTCPServer(("", 11000), HTTPHandler)
+  server = socketserver.ThreadingTCPServer((ip, 11000), HTTPHandler)
   server.allow_reuse_address = True
   server.serve_forever()
 

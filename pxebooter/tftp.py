@@ -91,9 +91,9 @@ class TFTPHandler(socketserver.BaseRequestHandler):
     format_str = f"!HH{len(data)}s"
     return struct.pack(format_str, 3, block_number, data)
 
-def run():
+def run(ip:str=""):
   print("starting tftp")
-  server = socketserver.ThreadingUDPServer(("", 69), TFTPHandler)
+  server = socketserver.ThreadingUDPServer((ip, 69), TFTPHandler)
   server.allow_reuse_address = True
   server.serve_forever()
 

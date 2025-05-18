@@ -162,12 +162,12 @@ def run_proxy():
   server.socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
   server.serve_forever()
 
-def run():
+def run(ip:str=""):
   print("starting dhcp")
 
   threading.Thread(target=run_proxy, daemon=True).start()
 
-  server = socketserver.UDPServer(("", 67), DHCPHandlerFactory(False))
+  server = socketserver.UDPServer((ip, 67), DHCPHandlerFactory(False))
   server.allow_reuse_address = True
   server.socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
   server.serve_forever()
