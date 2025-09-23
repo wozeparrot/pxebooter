@@ -1,10 +1,9 @@
 import socket, socketserver, struct, threading
 
-def DHCPHandlerFactory(proxy:bool, server_ip:str=""):
-  if not server_ip:
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.connect(("10.254.254.254", 1))
-    server_ip = s.getsockname()[0]
+def DHCPHandlerFactory(proxy:bool):
+  s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+  s.connect(("10.254.254.254", 1))
+  server_ip = s.getsockname()[0]
 
   url = f"http://${server_ip}:11000/ipxe.efi"
 
@@ -156,21 +155,24 @@ def DHCPHandlerFactory(proxy:bool, server_ip:str=""):
       return parsed_options
   return DHCPHandler
 
-def run_proxy(ip:str=""):
+def run_proxy(dev:str=""):
   print("starting proxy dhcp")
-  server = socketserver.UDPServer((ip, 4011), DHCPHandlerFactory(True, ip))
+  server = socketserver.UDPServer(("", 4011), DHCPHandlerFactory(True))
   server.allow_reuse_address = True
   server.socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+  server.socket.setsockopt(socket.SOL_SOCKET, socket.SO_BINDTODEVICE, dev.encode())
   server.serve_forever()
 
-def run(ip:str=""):
+def run(dev:str=""):
   print("starting dhcp")
 
-  threading.Thread(target=run_proxy, args=(ip,), daemon=True).start()
+  threading.Thread(target=run_proxy, args=(dev,), daemon=True).start()
 
-  server = socketserver.UDPServer((ip, 67), DHCPHandlerFactory(False, ip))
+  server = socketserver.UDPServer(("", 67), DHCPHandlerFactory(False))
   server.allow_reuse_address = True
   server.socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+  if dev:
+    server.socket.setsockopt(socket.SOL_SOCKET, socket.SO_BINDTODEVICE, dev.encode())
   server.serve_forever()
 
 if __name__ == "__main__":

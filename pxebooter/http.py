@@ -8,11 +8,10 @@ try:
 except FileNotFoundError:
   BOOT_SPEC = {}
 
-def HTTPHandlerFactory(server_ip:str=""):
-  if not server_ip:
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.connect(("10.254.254.254", 1))
-    server_ip = s.getsockname()[0]
+def HTTPHandlerFactory():
+  s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+  s.connect(("10.254.254.254", 1))
+  server_ip = s.getsockname()[0]
 
   class HTTPHandler(BaseHTTPRequestHandler):
     def do_POST(self):
@@ -79,9 +78,9 @@ def HTTPHandlerFactory(server_ip:str=""):
         self.wfile.write(data)
   return HTTPHandler
 
-def run(ip:str=""):
+def run():
   print("starting http")
-  server = socketserver.ThreadingTCPServer((ip, 11000), HTTPHandlerFactory(ip))
+  server = socketserver.ThreadingTCPServer(("", 11000), HTTPHandlerFactory())
   server.allow_reuse_address = True
   server.serve_forever()
 

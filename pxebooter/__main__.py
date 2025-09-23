@@ -5,18 +5,16 @@ from .tftp import run as tftp_run
 from .http import run as http_run
 
 if __name__ == "__main__":
-  if len(sys.argv) > 1:
-    ip = sys.argv[1]
-  else:
-    ip = ""
+  assert len(sys.argv) == 2, "Usage: pxebooter [network_interface]"
+  dev = sys.argv[1]
 
-  dhcp_process = Process(target=dhcp_run, args=(ip,))
+  dhcp_process = Process(target=dhcp_run, args=(dev,))
   dhcp_process.start()
 
-  tftp_process = Process(target=tftp_run, args=(ip,))
+  tftp_process = Process(target=tftp_run)
   tftp_process.start()
 
-  http_run(ip)
+  http_run()
 
   tftp_process.join()
   dhcp_process.join()

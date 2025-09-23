@@ -1,10 +1,9 @@
 import socket, socketserver, struct
 
-def TFTPHandlerFactory(server_ip:str=""):
-  if not server_ip:
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.connect(("10.254.254.254", 1))
-    server_ip = s.getsockname()[0]
+def TFTPHandlerFactory():
+  s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+  s.connect(("10.254.254.254", 1))
+  server_ip = s.getsockname()[0]
 
   class TFTPHandler(socketserver.BaseRequestHandler):
     def handle(self):
@@ -95,9 +94,9 @@ def TFTPHandlerFactory(server_ip:str=""):
       return struct.pack(format_str, 3, block_number, data)
   return TFTPHandler
 
-def run(ip:str=""):
+def run():
   print("starting tftp")
-  server = socketserver.ThreadingUDPServer((ip, 69), TFTPHandlerFactory(ip))
+  server = socketserver.ThreadingUDPServer(("", 69), TFTPHandlerFactory())
   server.allow_reuse_address = True
   server.serve_forever()
 
