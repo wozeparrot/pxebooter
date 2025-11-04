@@ -172,7 +172,7 @@ def run(dev:str=""):
 
   server = socketserver.UDPServer(("", 67), DHCPHandlerFactory(False))
   server.allow_reuse_address = True
-  server.allow_reuse_address = True
+  server.allow_reuse_port = True
   server.socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
   if dev:
     server.socket.setsockopt(socket.SOL_SOCKET, socket.SO_BINDTODEVICE, dev.encode())
