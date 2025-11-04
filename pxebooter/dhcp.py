@@ -160,7 +160,8 @@ def run_proxy(dev:str=""):
   server = socketserver.UDPServer(("", 4011), DHCPHandlerFactory(True))
   server.allow_reuse_address = True
   server.socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
-  server.socket.setsockopt(socket.SOL_SOCKET, socket.SO_BINDTODEVICE, dev.encode())
+  if dev:
+    server.socket.setsockopt(socket.SOL_SOCKET, socket.SO_BINDTODEVICE, dev.encode())
   server.serve_forever()
 
 def run(dev:str=""):
