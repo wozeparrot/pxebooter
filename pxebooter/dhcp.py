@@ -159,6 +159,7 @@ def run_proxy(dev:str=""):
   print("starting proxy dhcp")
   server = socketserver.UDPServer(("", 4011), DHCPHandlerFactory(True))
   server.allow_reuse_address = True
+  server.allow_reuse_port = True
   server.socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
   if dev:
     server.socket.setsockopt(socket.SOL_SOCKET, socket.SO_BINDTODEVICE, dev.encode())
@@ -170,6 +171,7 @@ def run(dev:str=""):
   threading.Thread(target=run_proxy, args=(dev,), daemon=True).start()
 
   server = socketserver.UDPServer(("", 67), DHCPHandlerFactory(False))
+  server.allow_reuse_address = True
   server.allow_reuse_address = True
   server.socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
   if dev:
